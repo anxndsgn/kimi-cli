@@ -98,7 +98,7 @@ function App() {
 
   const currentSession = useMemo(
     () => sessions.find((session) => session.sessionId === selectedSessionId),
-    [sessions, selectedSessionId],
+    [sessions, selectedSessionId]
   );
 
   const [streamStatus, setStreamStatus] = useState<ChatStatus>("ready");
@@ -213,21 +213,13 @@ function App() {
       return;
     }
 
-    const sessionExists = sessions.some(
-      (s) => s.sessionId === selectedSessionId,
-    );
+    const sessionExists = sessions.some((s) => s.sessionId === selectedSessionId);
     if (!sessionExists) {
       console.log("[App] Session from URL not found, clearing selection");
       updateUrlWithSession(null);
       selectSession("");
     }
-  }, [
-    sessions,
-    selectedSessionId,
-    selectSession,
-    hasMoreSessions,
-    searchQuery,
-  ]);
+  }, [sessions, selectedSessionId, selectSession, hasMoreSessions, searchQuery]);
 
   // Update URL when selected session changes
   useEffect(() => {
@@ -264,34 +256,31 @@ function App() {
         return;
       }
 
-      console.log(
-        "[App] Prompt complete, refreshing session info:",
-        status.sessionId,
-      );
+      console.log("[App] Prompt complete, refreshing session info:", status.sessionId);
       refreshSession(status.sessionId);
     },
-    [applySessionStatus, refreshSession],
+    [applySessionStatus, refreshSession]
   );
 
   const handleCreateSession = useCallback(
     async (workDir: string, createDir?: boolean) => {
       await createSession(workDir, createDir);
     },
-    [createSession],
+    [createSession]
   );
 
   const handleCreateSessionInDir = useCallback(
     async (workDir: string) => {
       await createSession(workDir);
     },
-    [createSession],
+    [createSession]
   );
 
   const handleDeleteSession = useCallback(
     async (sessionId: string) => {
       await deleteSession(sessionId);
     },
-    [deleteSession],
+    [deleteSession]
   );
 
   const handleSelectSession = useCallback(
@@ -299,7 +288,7 @@ function App() {
       selectSession(sessionId);
       setIsMobileSidebarOpen(false);
     },
-    [selectSession],
+    [selectSession]
   );
 
   const handleRefreshSessions = useCallback(async () => {
@@ -310,7 +299,7 @@ function App() {
     (query: string) => {
       setSearchQuery(query);
     },
-    [setSearchQuery],
+    [setSearchQuery]
   );
 
   // Transform Session[] to SessionSummary[] for sidebar
@@ -323,7 +312,7 @@ function App() {
         workDir: session.workDir,
         lastUpdated: session.lastUpdated,
       })),
-    [sessions],
+    [sessions]
   );
 
   // Transform archived Session[] to SessionSummary[] for sidebar
@@ -336,14 +325,14 @@ function App() {
         workDir: session.workDir,
         lastUpdated: session.lastUpdated,
       })),
-    [archivedSessions],
+    [archivedSessions]
   );
 
   const handleForkSession = useCallback(
     async (sessionId: string, turnIndex: number) => {
       await forkSession(sessionId, turnIndex);
     },
-    [forkSession],
+    [forkSession]
   );
 
   const renderChatPanel = () => (
@@ -367,16 +356,16 @@ function App() {
 
   return (
     <PromptInputProvider>
-      <div className='box-border flex h-dvh flex-col bg-background text-foreground px-(--safe-left) pr-(--safe-right) pt-(--safe-top) pb-1 lg:pb-(--safe-bottom) max-lg:h-svh max-lg:overflow-hidden'>
-        <div className='mx-auto flex h-full min-h-0 w-full flex-1 flex-col gap-2 max-w-none'>
+      <div className="box-border flex h-dvh flex-col bg-background text-foreground px-(--safe-left) pr-(--safe-right) pt-(--safe-top) pb-1 lg:pb-(--safe-bottom) max-lg:h-svh max-lg:overflow-hidden">
+        <div className="mx-auto flex h-full min-h-0 w-full flex-1 flex-col gap-2 max-w-none">
           {isDesktop ? (
             <ResizablePanelGroup
-              orientation='horizontal'
-              className='min-h-0 flex-1 overflow-hidden'
+              orientation="horizontal"
+              className="min-h-0 flex-1 overflow-hidden"
             >
               {/* Sidebar */}
               <ResizablePanel
-                id='sessions'
+                id="sessions"
                 collapsible
                 collapsedSize={SIDEBAR_COLLAPSED_SIZE}
                 defaultSize={SIDEBAR_DEFAULT_SIZE}
@@ -384,9 +373,7 @@ function App() {
                 elementRef={sidebarElementRef}
                 panelRef={sidebarPanelRef}
                 onResize={handleSidebarResize}
-                className={cn(
-                  "relative min-h-0 border-r pl-0.5 pr-2 overflow-hidden",
-                )}
+                className={cn("relative min-h-0 border-r pl-0.5 pr-2 overflow-hidden")}
               >
                 {/* Collapsed sidebar - vertical strip with logo and expand button */}
                 <div
@@ -394,32 +381,26 @@ function App() {
                     "absolute inset-0 flex h-full flex-col items-center justify-between transition-all duration-200 ease-in-out",
                     isSidebarCollapsed
                       ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2 pointer-events-none select-none",
+                      : "opacity-0 -translate-x-2 pointer-events-none select-none"
                   )}
                 >
                   <a
-                    href='https://www.kimi.com/code'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='hover:opacity-80 transition-opacity p-3'
+                    href="https://www.kimi.com/code"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition-opacity p-3"
                   >
-                    <img
-                      src='/logo.png'
-                      alt='Kimi'
-                      width={24}
-                      height={24}
-                      className='size-6'
-                    />
+                    <img src="/logo.png" alt="Kimi" width={24} height={24} className="size-6" />
                   </a>
                   <Button
-                    size='icon-sm'
-                    type='button'
-                    aria-label='Expand sidebar'
-                    variant='ghost'
-                    className='m-3'
+                    size="icon-sm"
+                    type="button"
+                    aria-label="Expand sidebar"
+                    variant="ghost"
+                    className="m-3"
                     onClick={handleExpandSidebar}
                   >
-                    <PanelLeftOpen className='size-4' />
+                    <PanelLeftOpen className="size-4" />
                   </Button>
                 </div>
                 {/* Expanded sidebar */}
@@ -428,7 +409,7 @@ function App() {
                     "absolute inset-0 flex h-full min-h-0 flex-col gap-3 transition-all duration-200 ease-in-out",
                     isSidebarCollapsed
                       ? "opacity-0 translate-x-2 pointer-events-none select-none"
-                      : "opacity-100 translate-x-0",
+                      : "opacity-100 translate-x-0"
                   )}
                 >
                   <SessionsSidebar
@@ -458,41 +439,36 @@ function App() {
                     searchQuery={searchQuery}
                     onSearchQueryChange={handleSearchQueryChange}
                   />
-                  <div className='mt-auto flex items-center justify-between px-3 pb-3'>
-                    <div className='flex items-center gap-2'>
+                  <div className="mt-auto flex items-center justify-between px-3 pb-3">
+                    <div className="flex items-center gap-2">
                       <ThemeToggle />
                     </div>
                     <Button
-                      size='icon-sm'
-                      type='button'
-                      aria-label='Collapse sidebar'
-                      variant='ghost'
+                      size="icon-sm"
+                      type="button"
+                      aria-label="Collapse sidebar"
+                      variant="ghost"
                       onClick={handleCollapseSidebar}
                     >
-                      <PanelLeftClose className='size-4' />
+                      <PanelLeftClose className="size-4" />
                     </Button>
                   </div>
                 </div>
               </ResizablePanel>
 
               {/* Main Chat Area */}
-              <ResizablePanel
-                id='chat'
-                className='relative min-h-0 flex justify-center flex-1'
-              >
+              <ResizablePanel id="chat" className="relative min-h-0 flex justify-center flex-1">
                 {renderChatPanel()}
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
-            <div className='flex min-h-0 flex-1 flex-col'>
-              {renderChatPanel()}
-            </div>
+            <div className="flex min-h-0 flex-1 flex-col">{renderChatPanel()}</div>
           )}
         </div>
       </div>
 
       {/* Toast notifications */}
-      <Toaster position='top-right' richColors />
+      <Toaster position="top-right" richColors />
 
       {/* Create Session Dialog - unified for sidebar button and keyboard shortcut */}
       <CreateSessionDialog
@@ -505,19 +481,15 @@ function App() {
 
       {/* Mobile Sessions Sidebar */}
       {isMobileSidebarOpen ? (
-        <div
-          className='fixed inset-0 z-50 flex lg:hidden'
-          role='dialog'
-          aria-modal='true'
-        >
+        <div className="fixed inset-0 z-50 flex lg:hidden" role="dialog" aria-modal="true">
           <button
-            type='button'
-            className='absolute inset-0 bg-black/40'
-            aria-label='Close sessions sidebar'
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Close sessions sidebar"
             onClick={handleCloseMobileSidebar}
           />
-          <div className='relative flex h-full w-[min(86vw,360px)] flex-col border-r border-border bg-background pt-(--safe-top) shadow-2xl'>
-            <div className='min-h-0 flex-1'>
+          <div className="relative flex h-full w-[min(86vw,360px)] flex-col border-r border-border bg-background pt-(--safe-top) shadow-2xl">
+            <div className="min-h-0 flex-1">
               <SessionsSidebar
                 onDeleteSession={handleDeleteSession}
                 onSelectSession={handleSelectSession}
@@ -547,7 +519,7 @@ function App() {
                 onSearchQueryChange={handleSearchQueryChange}
               />
             </div>
-            <div className='flex items-center justify-between border-t px-3 py-2'>
+            <div className="flex items-center justify-between border-t px-3 py-2">
               <ThemeToggle />
             </div>
           </div>

@@ -1,11 +1,4 @@
-import {
-  memo,
-  type ReactElement,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, type ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import type { ChatStatus } from "ai";
 import type { PromptInputMessage } from "@ai-elements";
 import type { ApprovalResponseDecision, TokenUsage } from "@/hooks/wireTypes";
@@ -22,10 +15,7 @@ import { ChatConversation } from "./components/chat-conversation";
 import { ChatPromptComposer } from "./components/chat-prompt-composer";
 import { ApprovalDialog } from "./components/approval-dialog";
 import { useGitDiffStats } from "@/hooks/useGitDiffStats";
-import {
-  deriveActivityStatus,
-  type ActivityDetail,
-} from "./components/activity-status-indicator";
+import { deriveActivityStatus, type ActivityDetail } from "./components/activity-status-indicator";
 
 // Re-export LiveMessage type from hooks for backward compatibility
 export type { LiveMessage } from "@/hooks/types";
@@ -39,7 +29,7 @@ type ChatWorkspaceProps = {
   onApprovalResponse?: (
     requestId: string,
     decision: ApprovalResponseDecision,
-    reason?: string,
+    reason?: string
   ) => Promise<void>;
   sessionDescription?: string;
   /** Context usage (0-1) */
@@ -53,10 +43,7 @@ type ChatWorkspaceProps = {
   /** Whether the stream is still replaying history */
   isReplayingHistory?: boolean;
   /** List files inside the session workspace */
-  onListSessionDirectory?: (
-    sessionId: string,
-    path?: string,
-  ) => Promise<SessionFileEntry[]>;
+  onListSessionDirectory?: (sessionId: string, path?: string) => Promise<SessionFileEntry[]>;
   /** Build a direct download URL for a workspace file */
   onGetSessionFileUrl?: (sessionId: string, path: string) => string;
   /** Fetch a workspace file as a Blob for preview */
@@ -110,13 +97,11 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
 }: ChatWorkspaceProps): ReactElement {
   const [blocksExpanded, setBlocksExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [pendingApprovalMap, setPendingApprovalMap] = useState<
-    Record<string, boolean>
-  >({});
+  const [pendingApprovalMap, setPendingApprovalMap] = useState<Record<string, boolean>>({});
 
   // Fetch git diff stats for the current session
   const { stats: gitDiffStats, isLoading: isGitDiffLoading } = useGitDiffStats(
-    currentSession?.sessionId ?? null,
+    currentSession?.sessionId ?? null
   );
 
   // Derive activity status for the header indicator
@@ -144,13 +129,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
 
     prevActivityRef.current = newStatus;
     return newStatus;
-  }, [
-    status,
-    isAwaitingFirstResponse,
-    isReplayingHistory,
-    isUploadingFiles,
-    messages,
-  ]);
+  }, [status, isAwaitingFirstResponse, isReplayingHistory, isUploadingFiles, messages]);
 
   const maxTokens = maxContextSize ?? 64000;
   const usedTokens = Math.round(contextUsage * maxTokens);
@@ -187,7 +166,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
         });
       }
     },
-    [onApprovalResponse],
+    [onApprovalResponse]
   );
 
   // Wrapper for ApprovalDialog that routes through handleApprovalAction
@@ -195,21 +174,18 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
   const handleDialogApprovalResponse = useCallback(
     async (requestId: string, decision: ApprovalResponseDecision) => {
       for (const message of messages) {
-        if (
-          message.variant === "tool" &&
-          message.toolCall?.approval?.id === requestId
-        ) {
+        if (message.variant === "tool" && message.toolCall?.approval?.id === requestId) {
           await handleApprovalAction(message.toolCall.approval, decision);
           return;
         }
       }
     },
-    [messages, handleApprovalAction],
+    [messages, handleApprovalAction]
   );
 
   return (
-    <div className='flex h-full min-h-0 w-full flex-col overflow-hidden lg:sticky lg:top-4 lg:min-h-[560px]'>
-      <div className='relative flex h-full flex-col'>
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden lg:sticky lg:top-4 lg:min-h-[560px]">
+      <div className="relative flex h-full flex-col">
         <ChatWorkspaceHeader
           currentStep={currentStep}
           sessionDescription={sessionDescription}
@@ -222,7 +198,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
           onRenameSession={onRenameSession}
         />
 
-        <div className='flex-1 overflow-hidden min-h-0'>
+        <div className="flex-1 overflow-hidden min-h-0">
           <ChatConversation
             messages={messages}
             status={status}
@@ -230,9 +206,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
             currentSession={currentSession}
             isReplayingHistory={isReplayingHistory}
             pendingApprovalMap={pendingApprovalMap}
-            onApprovalAction={
-              onApprovalResponse ? handleApprovalAction : undefined
-            }
+            onApprovalAction={onApprovalResponse ? handleApprovalAction : undefined}
             canRespondToApproval={Boolean(onApprovalResponse)}
             blocksExpanded={blocksExpanded}
             onCreateSession={onCreateSession}
@@ -251,7 +225,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
         />
 
         {currentSession && (
-          <div className='mt-auto shrink-0 px-3 pb-3'>
+          <div className="mt-auto shrink-0 px-3 pb-3">
             <ChatPromptComposer
               status={status}
               onSubmit={onSubmit}

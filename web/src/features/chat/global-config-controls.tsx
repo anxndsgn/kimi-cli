@@ -7,11 +7,7 @@ import { ModelCapability } from "@/lib/api/models";
 import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Loader } from "@/components/ai-elements/loader";
 import {
   ModelSelector,
@@ -46,11 +42,8 @@ export type GlobalConfigControlsProps = {
   className?: string;
 };
 
-export function GlobalConfigControls({
-  className,
-}: GlobalConfigControlsProps): ReactElement {
-  const { config, isLoading, isUpdating, error, refresh, update } =
-    useGlobalConfig();
+export function GlobalConfigControls({ className }: GlobalConfigControlsProps): ReactElement {
+  const { config, isLoading, isUpdating, error, refresh, update } = useGlobalConfig();
 
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [lastBusySkip, setLastBusySkip] = useState<string[] | null>(null);
@@ -62,14 +55,10 @@ export function GlobalConfigControls({
     return config.models.find((m) => m.name === config.defaultModel) ?? null;
   }, [config]);
 
-  const thinkingState = useMemo(
-    () => getThinkingState(currentModel),
-    [currentModel],
-  );
+  const thinkingState = useMemo(() => getThinkingState(currentModel), [currentModel]);
 
   const thinkingChecked = config?.defaultThinking ?? false;
-  const thinkingDisabled =
-    isLoading || isUpdating || thinkingState !== "enabled";
+  const thinkingDisabled = isLoading || isUpdating || thinkingState !== "enabled";
 
   const handleSelectModel = useCallback(
     async (modelKey: string) => {
@@ -100,12 +89,11 @@ export function GlobalConfigControls({
           setLastBusySkip(null);
         }
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to update global model";
+        const message = err instanceof Error ? err.message : "Failed to update global model";
         toast.error("Failed to update global model", { description: message });
       }
     },
-    [config, update],
+    [config, update]
   );
 
   const handleThinkingToggle = useCallback(
@@ -126,16 +114,13 @@ export function GlobalConfigControls({
           setLastBusySkip(null);
         }
       } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : "Failed to update global thinking";
+        const message = err instanceof Error ? err.message : "Failed to update global thinking";
         toast.error("Failed to update global thinking", {
           description: message,
         });
       }
     },
-    [config, update],
+    [config, update]
   );
 
   const handleForceRestartBusy = useCallback(async () => {
@@ -160,8 +145,7 @@ export function GlobalConfigControls({
             : "No running sessions to restart.",
       });
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to restart busy sessions";
+      const message = err instanceof Error ? err.message : "Failed to restart busy sessions";
       toast.error("Failed to restart busy sessions", { description: message });
     }
   }, [lastBusySkip, update]);
@@ -177,16 +161,12 @@ export function GlobalConfigControls({
   }, [thinkingState]);
 
   const thinkingToggle = (
-    <div className='flex h-9 items-center gap-2 rounded-md px-2'>
-      <span className='text-xs text-muted-foreground'>Thinking</span>
+    <div className="flex h-9 items-center gap-2 rounded-md px-2">
+      <span className="text-xs text-muted-foreground">Thinking</span>
       <Switch
-        aria-label='Toggle global thinking'
+        aria-label="Toggle global thinking"
         checked={
-          thinkingState === "forced"
-            ? true
-            : thinkingState === "disabled"
-              ? false
-              : thinkingChecked
+          thinkingState === "forced" ? true : thinkingState === "disabled" ? false : thinkingChecked
         }
         disabled={thinkingDisabled}
         onCheckedChange={handleThinkingToggle}
@@ -199,40 +179,36 @@ export function GlobalConfigControls({
   return (
     <div className={cn("flex items-center gap-1", className)}>
       <Button
-        variant='ghost'
-        size='icon-sm'
-        className='border-0'
-        aria-label='Attach files'
+        variant="ghost"
+        size="icon-sm"
+        className="border-0"
+        aria-label="Attach files"
         onClick={() => attachments.openFileDialog()}
       >
-        <Paperclip className='size-4' />
+        <Paperclip className="size-4" />
       </Button>
 
-      <div className='mx-0 h-4 w-px bg-border/70' />
+      <div className="mx-0 h-4 w-px bg-border/70" />
 
       <ModelSelector open={isSelectorOpen} onOpenChange={setIsSelectorOpen}>
         <ModelSelectorTrigger asChild>
           <Button
-            variant='ghost'
-            size='sm'
-            className='h-8 max-w-[160px] justify-start gap-2 border-0'
-            aria-label='Change global model'
+            variant="ghost"
+            size="sm"
+            className="h-8 max-w-[160px] justify-start gap-2 border-0"
+            aria-label="Change global model"
             disabled={isLoading || isUpdating || !config}
           >
-            <Cpu className='size-4 shrink-0' />
-            <span className='truncate'>
-              {config ? config.defaultModel : "Model"}
-            </span>
-            {(isLoading || isUpdating) && (
-              <Loader className='ml-auto shrink-0' size={14} />
-            )}
+            <Cpu className="size-4 shrink-0" />
+            <span className="truncate">{config ? config.defaultModel : "Model"}</span>
+            {(isLoading || isUpdating) && <Loader className="ml-auto shrink-0" size={14} />}
           </Button>
         </ModelSelectorTrigger>
-        <ModelSelectorContent title='Select global model'>
-          <ModelSelectorInput placeholder='Search models...' />
+        <ModelSelectorContent title="Select global model">
+          <ModelSelectorInput placeholder="Search models..." />
           <ModelSelectorList>
             <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
-            <ModelSelectorGroup heading='Models'>
+            <ModelSelectorGroup heading="Models">
               {(config?.models ?? []).map((m) => {
                 const isSelected = m.name === config?.defaultModel;
                 const label = `${m.name} (${m.provider})`;
@@ -241,19 +217,15 @@ export function GlobalConfigControls({
                     key={m.name}
                     value={`${m.name} ${m.model} ${m.provider}`}
                     onSelect={(_value) => handleSelectModel(m.name)}
-                    className='flex items-center gap-2'
+                    className="flex items-center gap-2"
                   >
                     {isSelected ? (
-                      <Check className='size-4 text-foreground' />
+                      <Check className="size-4 text-foreground" />
                     ) : (
-                      <span className='size-4' />
+                      <span className="size-4" />
                     )}
-                    <ModelSelectorName title={label}>
-                      {m.name}
-                    </ModelSelectorName>
-                    <span className='shrink-0 text-xs text-muted-foreground'>
-                      {m.provider}
-                    </span>
+                    <ModelSelectorName title={label}>{m.name}</ModelSelectorName>
+                    <span className="shrink-0 text-xs text-muted-foreground">{m.provider}</span>
                   </ModelSelectorItem>
                 );
               })}
@@ -262,7 +234,7 @@ export function GlobalConfigControls({
         </ModelSelectorContent>
       </ModelSelector>
 
-      <div className='mx-0 h-4 w-px bg-border/70' />
+      <div className="mx-0 h-4 w-px bg-border/70" />
 
       {thinkingTooltip ? (
         <Tooltip>
@@ -274,35 +246,35 @@ export function GlobalConfigControls({
       )}
 
       {(lastBusySkip && lastBusySkip.length > 0) || error ? (
-        <div className='mx-1.5 h-4 w-px bg-border/70' />
+        <div className="mx-1.5 h-4 w-px bg-border/70" />
       ) : null}
 
       {lastBusySkip && lastBusySkip.length > 0 ? (
         <Button
-          variant='outline'
-          size='icon'
-          className='size-9'
-          aria-label='Force restart busy sessions'
-          title='Force restart busy sessions'
+          variant="outline"
+          size="icon"
+          className="size-9"
+          aria-label="Force restart busy sessions"
+          title="Force restart busy sessions"
           onClick={handleForceRestartBusy}
           disabled={isUpdating}
         >
-          <RefreshCcw className='size-4' />
+          <RefreshCcw className="size-4" />
         </Button>
       ) : null}
 
       {error ? (
         <Button
-          variant='outline'
-          size='icon'
-          className='size-9'
-          aria-label='Reload global config'
-          title='Reload global config'
+          variant="outline"
+          size="icon"
+          className="size-9"
+          aria-label="Reload global config"
+          title="Reload global config"
           onClick={() => {
             refresh();
           }}
         >
-          <RefreshCcw className='size-4' />
+          <RefreshCcw className="size-4" />
         </Button>
       ) : null}
     </div>
