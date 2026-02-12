@@ -281,39 +281,36 @@ export function PromptInputAttachment({
   const isImage = data.mediaType?.startsWith("image/") && data.url;
   const isVideo = data.mediaType?.startsWith("video/") && data.url;
 
-  const attachmentLabel = filename || (isImage ? "Image" : isVideo ? "Video" : "Attachment");
+  const attachmentLabel =
+    filename || (isImage ? "Image" : isVideo ? "Video" : "Attachment");
   const typeBadge = isImage ? "Image" : isVideo ? "Video" : undefined;
   const videoPoster = useVideoThumbnail(isVideo ? data.url : undefined);
 
   if (isImage) {
     return (
-      <div
-        className={cn("group relative", className)}
-        key={data.id}
-        {...props}
-      >
+      <div className={cn("group relative", className)} key={data.id} {...props}>
         <img
           alt={filename || "uploaded image"}
-          className="h-14 w-14 rounded-lg border border-border/50 object-cover"
+          className='h-14 w-14 rounded-lg border border-border/50 object-cover'
           src={data.url}
         />
         {typeBadge && (
-          <span className="pointer-events-none absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-semibold leading-none text-white shadow-sm">
+          <span className='pointer-events-none absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-semibold leading-none text-white shadow-sm'>
             {typeBadge}
           </span>
         )}
         <Button
-          aria-label="Remove attachment"
-          className="hover-reveal absolute -right-1.5 -top-1.5 size-5 cursor-pointer rounded-full bg-background p-0 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3"
+          aria-label='Remove attachment'
+          className='hover-reveal absolute -right-1.5 -top-1.5 size-5 cursor-pointer rounded-full bg-background p-0 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3'
           onClick={(e) => {
             e.stopPropagation();
             attachments.remove(data.id);
           }}
-          type="button"
-          variant="outline"
+          type='button'
+          variant='outline'
         >
           <XIcon />
-          <span className="sr-only">Remove</span>
+          <span className='sr-only'>Remove</span>
         </Button>
       </div>
     );
@@ -321,36 +318,32 @@ export function PromptInputAttachment({
 
   if (isVideo) {
     return (
-      <div
-        className={cn("group relative", className)}
-        key={data.id}
-        {...props}
-      >
+      <div className={cn("group relative", className)} key={data.id} {...props}>
         <video
-          className="h-14 w-14 rounded-lg border border-border/50 object-cover"
+          className='h-14 w-14 rounded-lg border border-border/50 object-cover'
           poster={videoPoster ?? undefined}
-          preload="metadata"
+          preload='metadata'
           src={data.url}
           muted
           playsInline
         />
         {typeBadge && (
-          <span className="pointer-events-none absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-semibold leading-none text-white shadow-sm">
+          <span className='pointer-events-none absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-semibold leading-none text-white shadow-sm'>
             {typeBadge}
           </span>
         )}
         <Button
-          aria-label="Remove attachment"
-          className="hover-reveal absolute -right-1.5 -top-1.5 size-5 cursor-pointer rounded-full bg-background p-0 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3"
+          aria-label='Remove attachment'
+          className='hover-reveal absolute -right-1.5 -top-1.5 size-5 cursor-pointer rounded-full bg-background p-0 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3'
           onClick={(e) => {
             e.stopPropagation();
             attachments.remove(data.id);
           }}
-          type="button"
-          variant="outline"
+          type='button'
+          variant='outline'
         >
           <XIcon />
-          <span className="sr-only">Remove</span>
+          <span className='sr-only'>Remove</span>
         </Button>
       </div>
     );
@@ -367,39 +360,39 @@ export function PromptInputAttachment({
           key={data.id}
           {...props}
         >
-          <div className="relative size-5 shrink-0">
-            <div className="absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0">
-              <div className="flex size-5 items-center justify-center text-muted-foreground">
-                <PaperclipIcon className="size-3" />
+          <div className='relative size-5 shrink-0'>
+            <div className='absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0'>
+              <div className='flex size-5 items-center justify-center text-muted-foreground'>
+                <PaperclipIcon className='size-3' />
               </div>
             </div>
             <Button
-              aria-label="Remove attachment"
-              className="hover-reveal absolute inset-0 size-5 cursor-pointer rounded p-0 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 [&>svg]:size-2.5"
+              aria-label='Remove attachment'
+              className='hover-reveal absolute inset-0 size-5 cursor-pointer rounded p-0 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 [&>svg]:size-2.5'
               onClick={(e) => {
                 e.stopPropagation();
                 attachments.remove(data.id);
               }}
-              type="button"
-              variant="ghost"
+              type='button'
+              variant='ghost'
             >
               <XIcon />
-              <span className="sr-only">Remove</span>
+              <span className='sr-only'>Remove</span>
             </Button>
           </div>
 
-          <span className="flex-1 truncate">{attachmentLabel}</span>
+          <span className='flex-1 truncate'>{attachmentLabel}</span>
         </div>
       </HoverCardTrigger>
-      <PromptInputHoverCardContent className="w-auto p-2">
-        <div className="w-auto space-y-3">
-          <div className="flex items-center gap-2.5">
-            <div className="min-w-0 flex-1 space-y-1 px-0.5">
-              <h4 className="truncate font-semibold text-sm leading-none">
+      <PromptInputHoverCardContent className='w-auto p-2'>
+        <div className='w-auto space-y-3'>
+          <div className='flex items-center gap-2.5'>
+            <div className='min-w-0 flex-1 space-y-1 px-0.5'>
+              <h4 className='truncate font-semibold text-sm leading-none'>
                 {attachmentLabel}
               </h4>
               {data.mediaType && (
-                <p className="truncate font-mono text-muted-foreground text-xs">
+                <p className='truncate font-mono text-muted-foreground text-xs'>
                   {data.mediaType}
                 </p>
               )}
@@ -461,7 +454,7 @@ export const PromptInputActionAddAttachments = ({
         attachments.openFileDialog();
       }}
     >
-      <ImageIcon className="mr-2 size-4" /> {label}
+      <ImageIcon className='mr-2 size-4' /> {label}
     </DropdownMenuItem>
   );
 };
@@ -543,18 +536,38 @@ export const PromptInput = ({
       const isVideo = file.type.startsWith("video/");
 
       if (isImage) {
-        if (!IMAGE_CONFIG.allowedTypes.includes(file.type as typeof IMAGE_CONFIG.allowedTypes[number])) {
-          return { valid: false, error: `Unsupported image type: ${file.type}` };
+        if (
+          !IMAGE_CONFIG.allowedTypes.includes(
+            file.type as (typeof IMAGE_CONFIG.allowedTypes)[number],
+          )
+        ) {
+          return {
+            valid: false,
+            error: `Unsupported image type: ${file.type}`,
+          };
         }
         if (file.size > IMAGE_CONFIG.maxSizeBytes) {
-          return { valid: false, error: `Image too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max ${IMAGE_CONFIG.maxSizeBytes / 1024 / 1024}MB)` };
+          return {
+            valid: false,
+            error: `Image too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max ${IMAGE_CONFIG.maxSizeBytes / 1024 / 1024}MB)`,
+          };
         }
       } else if (isVideo) {
-        if (!VIDEO_CONFIG.allowedTypes.includes(file.type as typeof VIDEO_CONFIG.allowedTypes[number])) {
-          return { valid: false, error: `Unsupported video type: ${file.type}` };
+        if (
+          !VIDEO_CONFIG.allowedTypes.includes(
+            file.type as (typeof VIDEO_CONFIG.allowedTypes)[number],
+          )
+        ) {
+          return {
+            valid: false,
+            error: `Unsupported video type: ${file.type}`,
+          };
         }
         if (file.size > VIDEO_CONFIG.maxSizeBytes) {
-          return { valid: false, error: `Video too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max ${VIDEO_CONFIG.maxSizeBytes / 1024 / 1024}MB)` };
+          return {
+            valid: false,
+            error: `Video too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max ${VIDEO_CONFIG.maxSizeBytes / 1024 / 1024}MB)`,
+          };
         }
       }
       return { valid: true };
@@ -598,9 +611,10 @@ export const PromptInput = ({
       // Report first validation error if any files failed
       if (firstValidationError && validatedFiles.length < accepted.length) {
         const failedCount = accepted.length - validatedFiles.length;
-        const message = failedCount > 1
-          ? `${failedCount} files failed validation. First error: ${firstValidationError}`
-          : firstValidationError;
+        const message =
+          failedCount > 1
+            ? `${failedCount} files failed validation. First error: ${firstValidationError}`
+            : firstValidationError;
         onError?.({
           code: "max_file_size",
           message,
@@ -894,22 +908,22 @@ export const PromptInput = ({
     <>
       <input
         accept={accept}
-        aria-label="Upload files"
-        className="hidden"
+        aria-label='Upload files'
+        className='hidden'
         multiple={multiple}
         onChange={handleChange}
         ref={inputRef}
-        title="Upload files"
-        type="file"
+        title='Upload files'
+        type='file'
       />
       <form
         className={cn("w-full", className)}
-        autoComplete="off"
+        autoComplete='off'
         onSubmit={handleSubmit}
         ref={formRef}
         {...props}
       >
-        <InputGroup className="overflow-visible">{children}</InputGroup>
+        <InputGroup className='overflow-visible'>{children}</InputGroup>
       </form>
     </>
   );
@@ -1041,8 +1055,8 @@ export const PromptInputTextarea = forwardRef<
       <InputGroupTextarea
         ref={ref}
         className={cn("field-sizing-content max-h-48 min-h-16", className)}
-        autoComplete="off"
-        name="message"
+        autoComplete='off'
+        name='message'
         onBlur={() => setIsComposing(false)}
         onCompositionEnd={() => setIsComposing(false)}
         onCompositionStart={() => setIsComposing(true)}
@@ -1066,7 +1080,7 @@ export const PromptInputHeader = ({
   ...props
 }: PromptInputHeaderProps) => (
   <InputGroupAddon
-    align="block-end"
+    align='block-end'
     className={cn("order-first flex-wrap gap-1", className)}
     {...props}
   />
@@ -1082,7 +1096,7 @@ export const PromptInputFooter = ({
   ...props
 }: PromptInputFooterProps) => (
   <InputGroupAddon
-    align="block-end"
+    align='block-end'
     className={cn("justify-between gap-1", className)}
     {...props}
   />
@@ -1112,7 +1126,7 @@ export const PromptInputButton = ({
     <InputGroupButton
       className={cn(className)}
       size={newSize}
-      type="button"
+      type='button'
       variant={variant}
       {...props}
     />
@@ -1133,7 +1147,7 @@ export const PromptInputActionMenuTrigger = ({
 }: PromptInputActionMenuTriggerProps) => (
   <DropdownMenuTrigger asChild>
     <PromptInputButton className={className} {...props}>
-      {children ?? <PlusIcon className="size-4" />}
+      {children ?? <PlusIcon className='size-4' />}
     </PromptInputButton>
   </DropdownMenuTrigger>
 );
@@ -1145,7 +1159,7 @@ export const PromptInputActionMenuContent = ({
   className,
   ...props
 }: PromptInputActionMenuContentProps) => (
-  <DropdownMenuContent align="start" className={cn(className)} {...props} />
+  <DropdownMenuContent align='start' className={cn(className)} {...props} />
 );
 
 export type PromptInputActionMenuItemProps = ComponentProps<
@@ -1173,22 +1187,22 @@ export const PromptInputSubmit = ({
   children,
   ...props
 }: PromptInputSubmitProps) => {
-  let Icon = <CornerDownLeftIcon className="size-4" />;
+  let Icon = <CornerDownLeftIcon className='size-4' />;
 
   if (status === "submitted") {
-    Icon = <Loader2Icon className="size-4 animate-spin" />;
+    Icon = <Loader2Icon className='size-4 animate-spin' />;
   } else if (status === "streaming") {
-    Icon = <SquareIcon className="size-4" />;
+    Icon = <SquareIcon className='size-4' />;
   } else if (status === "error") {
-    Icon = <XIcon className="size-4" />;
+    Icon = <XIcon className='size-4' />;
   }
 
   return (
     <InputGroupButton
-      aria-label="Submit"
+      aria-label='Submit'
       className={cn(className)}
       size={size}
-      type="submit"
+      type='submit'
       variant={variant}
       {...props}
     >
@@ -1352,7 +1366,7 @@ export const PromptInputSpeechButton = ({
       onClick={toggleListening}
       {...props}
     >
-      <MicIcon className="size-4" />
+      <MicIcon className='size-4' />
     </PromptInputButton>
   );
 };

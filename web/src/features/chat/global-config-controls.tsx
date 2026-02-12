@@ -177,10 +177,10 @@ export function GlobalConfigControls({
   }, [thinkingState]);
 
   const thinkingToggle = (
-    <div className="flex h-9 items-center gap-2 rounded-md px-2">
-      <span className="text-xs text-muted-foreground">Thinking</span>
+    <div className='flex h-9 items-center gap-2 rounded-md px-2'>
+      <span className='text-xs text-muted-foreground'>Thinking</span>
       <Switch
-        aria-label="Toggle global thinking"
+        aria-label='Toggle global thinking'
         checked={
           thinkingState === "forced"
             ? true
@@ -199,40 +199,40 @@ export function GlobalConfigControls({
   return (
     <div className={cn("flex items-center gap-1", className)}>
       <Button
-        variant="ghost"
-        size="icon"
-        className="size-9 border-0"
-        aria-label="Attach files"
+        variant='ghost'
+        size='icon-sm'
+        className='border-0'
+        aria-label='Attach files'
         onClick={() => attachments.openFileDialog()}
       >
-        <Paperclip className="size-4" />
+        <Paperclip className='size-4' />
       </Button>
 
-      <div className="mx-0 h-4 w-px bg-border/70" />
+      <div className='mx-0 h-4 w-px bg-border/70' />
 
       <ModelSelector open={isSelectorOpen} onOpenChange={setIsSelectorOpen}>
         <ModelSelectorTrigger asChild>
           <Button
-            variant="ghost"
-            size="sm"
-            className="h-9 max-w-[160px] justify-start gap-2 border-0"
-            aria-label="Change global model"
+            variant='ghost'
+            size='sm'
+            className='h-8 max-w-[160px] justify-start gap-2 border-0'
+            aria-label='Change global model'
             disabled={isLoading || isUpdating || !config}
           >
-            <Cpu className="size-4 shrink-0" />
-            <span className="truncate">
+            <Cpu className='size-4 shrink-0' />
+            <span className='truncate'>
               {config ? config.defaultModel : "Model"}
             </span>
             {(isLoading || isUpdating) && (
-              <Loader className="ml-auto shrink-0" size={14} />
+              <Loader className='ml-auto shrink-0' size={14} />
             )}
           </Button>
         </ModelSelectorTrigger>
-        <ModelSelectorContent title="Select global model">
-          <ModelSelectorInput placeholder="Search models..." />
+        <ModelSelectorContent title='Select global model'>
+          <ModelSelectorInput placeholder='Search models...' />
           <ModelSelectorList>
             <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
-            <ModelSelectorGroup heading="Models">
+            <ModelSelectorGroup heading='Models'>
               {(config?.models ?? []).map((m) => {
                 const isSelected = m.name === config?.defaultModel;
                 const label = `${m.name} (${m.provider})`;
@@ -241,17 +241,17 @@ export function GlobalConfigControls({
                     key={m.name}
                     value={`${m.name} ${m.model} ${m.provider}`}
                     onSelect={(_value) => handleSelectModel(m.name)}
-                    className="flex items-center gap-2"
+                    className='flex items-center gap-2'
                   >
                     {isSelected ? (
-                      <Check className="size-4 text-foreground" />
+                      <Check className='size-4 text-foreground' />
                     ) : (
-                      <span className="size-4" />
+                      <span className='size-4' />
                     )}
                     <ModelSelectorName title={label}>
                       {m.name}
                     </ModelSelectorName>
-                    <span className="shrink-0 text-xs text-muted-foreground">
+                    <span className='shrink-0 text-xs text-muted-foreground'>
                       {m.provider}
                     </span>
                   </ModelSelectorItem>
@@ -262,8 +262,8 @@ export function GlobalConfigControls({
         </ModelSelectorContent>
       </ModelSelector>
 
-      <div className="mx-0 h-4 w-px bg-border/70" />
-      
+      <div className='mx-0 h-4 w-px bg-border/70' />
+
       {thinkingTooltip ? (
         <Tooltip>
           <TooltipTrigger asChild>{thinkingToggle}</TooltipTrigger>
@@ -274,35 +274,35 @@ export function GlobalConfigControls({
       )}
 
       {(lastBusySkip && lastBusySkip.length > 0) || error ? (
-        <div className="mx-1.5 h-4 w-px bg-border/70" />
+        <div className='mx-1.5 h-4 w-px bg-border/70' />
       ) : null}
 
       {lastBusySkip && lastBusySkip.length > 0 ? (
         <Button
-          variant="outline"
-          size="icon"
-          className="size-9"
-          aria-label="Force restart busy sessions"
-          title="Force restart busy sessions"
+          variant='outline'
+          size='icon'
+          className='size-9'
+          aria-label='Force restart busy sessions'
+          title='Force restart busy sessions'
           onClick={handleForceRestartBusy}
           disabled={isUpdating}
         >
-          <RefreshCcw className="size-4" />
+          <RefreshCcw className='size-4' />
         </Button>
       ) : null}
 
       {error ? (
         <Button
-          variant="outline"
-          size="icon"
-          className="size-9"
-          aria-label="Reload global config"
-          title="Reload global config"
+          variant='outline'
+          size='icon'
+          className='size-9'
+          aria-label='Reload global config'
+          title='Reload global config'
           onClick={() => {
             refresh();
           }}
         >
-          <RefreshCcw className="size-4" />
+          <RefreshCcw className='size-4' />
         </Button>
       ) : null}
     </div>

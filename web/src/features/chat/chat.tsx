@@ -116,7 +116,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
 
   // Fetch git diff stats for the current session
   const { stats: gitDiffStats, isLoading: isGitDiffLoading } = useGitDiffStats(
-    currentSession?.sessionId ?? null
+    currentSession?.sessionId ?? null,
   );
 
   // Derive activity status for the header indicator
@@ -144,7 +144,13 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
 
     prevActivityRef.current = newStatus;
     return newStatus;
-  }, [status, isAwaitingFirstResponse, isReplayingHistory, isUploadingFiles, messages]);
+  }, [
+    status,
+    isAwaitingFirstResponse,
+    isReplayingHistory,
+    isUploadingFiles,
+    messages,
+  ]);
 
   const maxTokens = maxContextSize ?? 64000;
   const usedTokens = Math.round(contextUsage * maxTokens);
@@ -202,8 +208,8 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
   );
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden lg:sticky lg:top-4 lg:min-h-[560px]">
-      <div className="relative flex h-full flex-col">
+    <div className='flex h-full min-h-0 w-full flex-col overflow-hidden lg:sticky lg:top-4 lg:min-h-[560px]'>
+      <div className='relative flex h-full flex-col'>
         <ChatWorkspaceHeader
           currentStep={currentStep}
           sessionDescription={sessionDescription}
@@ -216,7 +222,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
           onRenameSession={onRenameSession}
         />
 
-        <div className="flex-1 overflow-hidden min-h-0">
+        <div className='flex-1 overflow-hidden min-h-0'>
           <ChatConversation
             messages={messages}
             status={status}
@@ -245,7 +251,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
         />
 
         {currentSession && (
-          <div className="mt-auto flex-shrink-0 px-0 pb-0 pt-0 sm:px-3 sm:pb-3 ">
+          <div className='mt-auto shrink-0 px-3 pb-3'>
             <ChatPromptComposer
               status={status}
               onSubmit={onSubmit}

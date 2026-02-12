@@ -25,7 +25,13 @@ import { useFileMentions } from "../useFileMentions";
 import { SlashCommandMenu } from "../slash-command-menu";
 import { useSlashCommands, type SlashCommandDef } from "../useSlashCommands";
 import { PromptToolbar } from "./prompt-toolbar";
-import { ArrowUpIcon, Loader2Icon, SquareIcon, Maximize2Icon, Minimize2Icon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  Loader2Icon,
+  SquareIcon,
+  Maximize2Icon,
+  Minimize2Icon,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -187,7 +193,7 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
   }, []);
 
   return (
-    <div className="w-full">
+    <div className='w-full'>
       <PromptToolbar
         gitDiffStats={gitDiffStats}
         isGitDiffLoading={isGitDiffLoading}
@@ -200,26 +206,26 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
       />
 
       <PromptInput
-        accept="*"
-        className="w-full [&_[data-slot=input-group]]:border [&_[data-slot=input-group]]:border-border"
+        accept='*'
+        className='w-full [&_[data-slot=input-group]]:border [&_[data-slot=input-group]]:border-border'
         multiple
         maxFiles={MEDIA_CONFIG.maxCount}
         onSubmit={onSubmit}
         onError={handleFileError}
       >
-        <PromptInputBody className="w-full relative">
+        <PromptInputBody className='w-full relative'>
           {/* Expand/Collapse button - positioned relative to entire input body */}
           <button
-            type="button"
+            type='button'
             onClick={handleToggleExpand}
             disabled={!(canSendMessage && currentSession)}
-            className="absolute top-2 right-2 z-10 p-1 cursor-pointer rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+            className='absolute top-2 right-2 z-10 p-1 cursor-pointer rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:pointer-events-none'
             aria-label={isExpanded ? "Collapse input" : "Expand input"}
           >
             {isExpanded ? (
-              <Minimize2Icon className="size-4" />
+              <Minimize2Icon className='size-4' />
             ) : (
-              <Maximize2Icon className="size-4" />
+              <Maximize2Icon className='size-4' />
             )}
           </button>
           <PromptInputAttachments>
@@ -227,15 +233,15 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
           </PromptInputAttachments>
           {isUploading ? (
             <Badge
-              className="mb-2 bg-secondary/70 text-muted-foreground"
-              variant="secondary"
+              className='mb-2 bg-secondary/70 text-muted-foreground'
+              variant='secondary'
             >
-              <Loader2Icon className="size-4 animate-spin text-primary" />
+              <Loader2Icon className='size-4 animate-spin text-primary' />
               <span>Uploading files…</span>
             </Badge>
           ) : null}
-          <div className="relative w-full flex items-start">
-            <div className="flex-1 relative">
+          <div className='relative w-full flex items-start'>
+            <div className='flex-1 relative'>
               <PromptInputTextarea
                 ref={textareaRef}
                 className={cn(
@@ -256,7 +262,12 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
                         : "Ask anything, / for commands, @ to mention files"
                 }
                 aria-busy={isUploading}
-                disabled={!canSendMessage || isUploading || !currentSession || isAwaitingIdle}
+                disabled={
+                  !canSendMessage ||
+                  isUploading ||
+                  !currentSession ||
+                  isAwaitingIdle
+                }
                 onChange={handleTextareaChange}
                 onSelect={handleTextareaSelection}
                 onKeyUp={handleTextareaSelection}
@@ -292,36 +303,35 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
             </div>
           </div>
         </PromptInputBody>
-        <PromptInputFooter className="w-full gap-2 py-1 border-none bg-transparent shadow-none">
-          <PromptInputTools className="flex-1 min-w-0 flex-wrap">
+        <PromptInputFooter className='w-full gap-2 pb-3 border-none bg-transparent shadow-none'>
+          <PromptInputTools className='flex-1 min-w-0 flex-wrap'>
             <GlobalConfigControls />
           </PromptInputTools>
           {isStreaming ? (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className='flex items-center gap-1.5 shrink-0'>
               <PromptInputButton
-                aria-label="Stop generation"
+                aria-label='Stop generation'
                 disabled={!onCancel}
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
                   onCancel?.();
                 }}
-                size="icon-sm"
-                variant="default"
-                className="shrink-0"
+                size='icon-sm'
+                variant='default'
+                className='shrink-0'
               >
-                <SquareIcon className="size-4" />
+                <SquareIcon className='size-4' />
               </PromptInputButton>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PromptInputSubmit
-                    aria-label="Queue message"
-                    size="icon-sm"
-                    variant="outline"
-                    className="shrink-0"
+                    aria-label='Queue message'
+                    variant='outline'
+                    className='shrink-0'
                     disabled={!(canSendMessage && currentSession)}
                   >
-                    <ArrowUpIcon className="size-4" />
+                    <ArrowUpIcon className='size-4' />
                   </PromptInputSubmit>
                 </TooltipTrigger>
                 <TooltipContent>Queue message</TooltipContent>
@@ -336,7 +346,7 @@ export const ChatPromptComposer = memo(function ChatPromptComposerComponent({
                 isUploading ||
                 !currentSession
               }
-              className="shrink-0"
+              className='shrink-0'
             />
           )}
         </PromptInputFooter>

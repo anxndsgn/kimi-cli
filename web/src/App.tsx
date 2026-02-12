@@ -16,6 +16,7 @@ import { ThemeToggle } from "./components/ui/theme-toggle";
 import type { SessionStatus } from "./lib/api/models";
 import type { PanelSize, PanelImperativeHandle } from "react-resizable-panels";
 import { consumeAuthTokenFromUrl, setAuthToken } from "./lib/auth";
+import { Button } from "./components/ui/button";
 
 /**
  * Get session ID from URL search params
@@ -220,7 +221,13 @@ function App() {
       updateUrlWithSession(null);
       selectSession("");
     }
-  }, [sessions, selectedSessionId, selectSession, hasMoreSessions, searchQuery]);
+  }, [
+    sessions,
+    selectedSessionId,
+    selectSession,
+    hasMoreSessions,
+    searchQuery,
+  ]);
 
   // Update URL when selected session changes
   useEffect(() => {
@@ -360,16 +367,16 @@ function App() {
 
   return (
     <PromptInputProvider>
-      <div className="box-border flex h-[100dvh] flex-col bg-background text-foreground px-[calc(0.75rem+var(--safe-left))] pr-[calc(0.75rem+var(--safe-right))] pt-[calc(0.75rem+var(--safe-top))] pb-1 lg:pb-[calc(0.75rem+var(--safe-bottom))] max-lg:h-[100svh] max-lg:overflow-hidden">
-        <div className="mx-auto flex h-full min-h-0 w-full flex-1 flex-col gap-2 max-w-none">
+      <div className='box-border flex h-dvh flex-col bg-background text-foreground px-(--safe-left) pr-(--safe-right) pt-(--safe-top) pb-1 lg:pb-(--safe-bottom) max-lg:h-svh max-lg:overflow-hidden'>
+        <div className='mx-auto flex h-full min-h-0 w-full flex-1 flex-col gap-2 max-w-none'>
           {isDesktop ? (
             <ResizablePanelGroup
-              orientation="horizontal"
-              className="min-h-0 flex-1 overflow-hidden"
+              orientation='horizontal'
+              className='min-h-0 flex-1 overflow-hidden'
             >
               {/* Sidebar */}
               <ResizablePanel
-                id="sessions"
+                id='sessions'
                 collapsible
                 collapsedSize={SIDEBAR_COLLAPSED_SIZE}
                 defaultSize={SIDEBAR_DEFAULT_SIZE}
@@ -377,39 +384,43 @@ function App() {
                 elementRef={sidebarElementRef}
                 panelRef={sidebarPanelRef}
                 onResize={handleSidebarResize}
-                className={cn("relative min-h-0 border-r pl-0.5 pr-2 overflow-hidden")}
+                className={cn(
+                  "relative min-h-0 border-r pl-0.5 pr-2 overflow-hidden",
+                )}
               >
                 {/* Collapsed sidebar - vertical strip with logo and expand button */}
                 <div
                   className={cn(
-                    "absolute inset-0 flex h-full flex-col items-center py-3 transition-all duration-200 ease-in-out",
+                    "absolute inset-0 flex h-full flex-col items-center justify-between transition-all duration-200 ease-in-out",
                     isSidebarCollapsed
                       ? "opacity-100 translate-x-0"
                       : "opacity-0 -translate-x-2 pointer-events-none select-none",
                   )}
                 >
                   <a
-                    href="https://www.kimi.com/code"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-80 transition-opacity"
+                    href='https://www.kimi.com/code'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='hover:opacity-80 transition-opacity p-3'
                   >
                     <img
-                      src="/logo.png"
-                      alt="Kimi"
+                      src='/logo.png'
+                      alt='Kimi'
                       width={24}
                       height={24}
-                      className="size-6"
+                      className='size-6'
                     />
                   </a>
-                  <button
-                    type="button"
-                    aria-label="Expand sidebar"
-                    className="mt-auto mb-1 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
+                  <Button
+                    size='icon-sm'
+                    type='button'
+                    aria-label='Expand sidebar'
+                    variant='ghost'
+                    className='m-3'
                     onClick={handleExpandSidebar}
                   >
-                    <PanelLeftOpen className="size-4" />
-                  </button>
+                    <PanelLeftOpen className='size-4' />
+                  </Button>
                 </div>
                 {/* Expanded sidebar */}
                 <div
@@ -447,29 +458,33 @@ function App() {
                     searchQuery={searchQuery}
                     onSearchQueryChange={handleSearchQueryChange}
                   />
-                  <div className="mt-auto flex items-center justify-between pl-2 pb-2 pr-2">
-                    <div className="flex items-center gap-2">
+                  <div className='mt-auto flex items-center justify-between px-3 pb-3'>
+                    <div className='flex items-center gap-2'>
                       <ThemeToggle />
                     </div>
-                    <button
-                      type="button"
-                      aria-label="Collapse sidebar"
-                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
+                    <Button
+                      size='icon-sm'
+                      type='button'
+                      aria-label='Collapse sidebar'
+                      variant='ghost'
                       onClick={handleCollapseSidebar}
                     >
-                      <PanelLeftClose className="size-4" />
-                    </button>
+                      <PanelLeftClose className='size-4' />
+                    </Button>
                   </div>
                 </div>
               </ResizablePanel>
 
               {/* Main Chat Area */}
-              <ResizablePanel id="chat" className="relative min-h-0 flex justify-center flex-1">
+              <ResizablePanel
+                id='chat'
+                className='relative min-h-0 flex justify-center flex-1'
+              >
                 {renderChatPanel()}
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
-            <div className="flex min-h-0 flex-1 flex-col">
+            <div className='flex min-h-0 flex-1 flex-col'>
               {renderChatPanel()}
             </div>
           )}
@@ -477,7 +492,7 @@ function App() {
       </div>
 
       {/* Toast notifications */}
-      <Toaster position="top-right" richColors />
+      <Toaster position='top-right' richColors />
 
       {/* Create Session Dialog - unified for sidebar button and keyboard shortcut */}
       <CreateSessionDialog
@@ -490,15 +505,19 @@ function App() {
 
       {/* Mobile Sessions Sidebar */}
       {isMobileSidebarOpen ? (
-        <div className="fixed inset-0 z-50 flex lg:hidden" role="dialog" aria-modal="true">
+        <div
+          className='fixed inset-0 z-50 flex lg:hidden'
+          role='dialog'
+          aria-modal='true'
+        >
           <button
-            type="button"
-            className="absolute inset-0 bg-black/40"
-            aria-label="Close sessions sidebar"
+            type='button'
+            className='absolute inset-0 bg-black/40'
+            aria-label='Close sessions sidebar'
             onClick={handleCloseMobileSidebar}
           />
-          <div className="relative flex h-full w-[min(86vw,360px)] flex-col border-r border-border bg-background pt-[var(--safe-top)] shadow-2xl">
-            <div className="min-h-0 flex-1">
+          <div className='relative flex h-full w-[min(86vw,360px)] flex-col border-r border-border bg-background pt-(--safe-top) shadow-2xl'>
+            <div className='min-h-0 flex-1'>
               <SessionsSidebar
                 onDeleteSession={handleDeleteSession}
                 onSelectSession={handleSelectSession}
@@ -528,7 +547,7 @@ function App() {
                 onSearchQueryChange={handleSearchQueryChange}
               />
             </div>
-            <div className="flex items-center justify-between border-t px-3 py-2">
+            <div className='flex items-center justify-between border-t px-3 py-2'>
               <ThemeToggle />
             </div>
           </div>

@@ -27,7 +27,11 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { UIMessage } from "ai";
-import type { MessageAttachmentPart, NoPreviewAttachment, VideoNoPreviewAttachment } from "@/hooks/types";
+import type {
+  MessageAttachmentPart,
+  NoPreviewAttachment,
+  VideoNoPreviewAttachment,
+} from "@/hooks/types";
 import { useVideoThumbnail } from "@/hooks/useVideoThumbnail";
 import {
   CheckIcon,
@@ -93,13 +97,13 @@ export const UserMessageContent = ({
   return (
     <div
       className={cn(
-        "w-full rounded-2xl bg-secondary/50 px-4 py-3 text-sm",
+        "w-full rounded-xl bg-secondary/50 px-4 py-3 text-sm",
         "dark:bg-secondary/30",
         className,
       )}
       {...props}
     >
-      <div className="whitespace-pre-wrap break-words">{children}</div>
+      <div className='whitespace-pre-wrap break-words'>{children}</div>
     </div>
   );
 };
@@ -131,9 +135,15 @@ export const MessageAction = ({
   ...props
 }: MessageActionProps) => {
   const button = (
-    <Button size={size} type="button" variant={variant} className={cn("size-6", className)} {...props}>
+    <Button
+      size={size}
+      type='button'
+      variant={variant}
+      className={cn("size-6", className)}
+      {...props}
+    >
       {children}
-      <span className="sr-only">{label || tooltip}</span>
+      <span className='sr-only'>{label || tooltip}</span>
     </Button>
   );
 
@@ -142,8 +152,8 @@ export const MessageAction = ({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
-          <TooltipContent className="px-1.5 py-0.5">
-            <p className="text-[12px]">{tooltip}</p>
+          <TooltipContent className='px-1.5 py-0.5'>
+            <p className='text-[12px]'>{tooltip}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -176,7 +186,11 @@ export const MessageCopyButton = ({
 
   return (
     <MessageAction tooltip={isCopied ? "Copied!" : "Copy"} onClick={handleCopy}>
-      {isCopied ? <CheckIcon className="size-3" /> : <CopyIcon className="size-3" />}
+      {isCopied ? (
+        <CheckIcon className='size-3' />
+      ) : (
+        <CopyIcon className='size-3' />
+      )}
     </MessageAction>
   );
 };
@@ -192,18 +206,23 @@ export const MessageForkButton = ({ onFork }: MessageForkButtonProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <AlertDialogTrigger asChild>
-              <Button size="icon-sm" type="button" variant="ghost" className="size-6">
-                <GitBranchIcon className="size-3" />
-                <span className="sr-only">Fork session</span>
+              <Button
+                size='icon-sm'
+                type='button'
+                variant='ghost'
+                className='size-6'
+              >
+                <GitBranchIcon className='size-3' />
+                <span className='sr-only'>Fork session</span>
               </Button>
             </AlertDialogTrigger>
           </TooltipTrigger>
-          <TooltipContent className="px-1.5 py-0.5">
-            <p className="text-[12px]">Fork session from this point</p>
+          <TooltipContent className='px-1.5 py-0.5'>
+            <p className='text-[12px]'>Fork session from this point</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <AlertDialogContent size="sm">
+      <AlertDialogContent size='sm'>
         <AlertDialogHeader>
           <AlertDialogTitle>Fork Session</AlertDialogTitle>
           <AlertDialogDescription>
@@ -344,8 +363,8 @@ export const MessageBranchSelector = ({
 
   return (
     <ButtonGroup
-      className="[&>*:not(:first-child)]:rounded-l-md [&>*:not(:last-child)]:rounded-r-md"
-      orientation="horizontal"
+      className='[&>*:not(:first-child)]:rounded-l-md [&>*:not(:last-child)]:rounded-r-md'
+      orientation='horizontal'
       {...props}
     />
   );
@@ -361,12 +380,12 @@ export const MessageBranchPrevious = ({
 
   return (
     <Button
-      aria-label="Previous branch"
+      aria-label='Previous branch'
       disabled={totalBranches <= 1}
       onClick={goToPrevious}
-      size="icon-sm"
-      type="button"
-      variant="ghost"
+      size='icon-sm'
+      type='button'
+      variant='ghost'
       {...props}
     >
       {children ?? <ChevronLeftIcon size={14} />}
@@ -385,12 +404,12 @@ export const MessageBranchNext = ({
 
   return (
     <Button
-      aria-label="Next branch"
+      aria-label='Next branch'
       disabled={totalBranches <= 1}
       onClick={goToNext}
-      size="icon-sm"
-      type="button"
-      variant="ghost"
+      size='icon-sm'
+      type='button'
+      variant='ghost'
       {...props}
     >
       {children ?? <ChevronRightIcon size={14} />}
@@ -481,7 +500,8 @@ export function MessageAttachment({
   const isText = mediaType?.startsWith("text/") && url;
   const canPreview = (isImage || isVideo || isText) && Boolean(url);
   const attachmentLabel =
-    filename || (isImage ? "Image" : isVideo || isVideoNoPreview ? "Video" : "Attachment");
+    filename ||
+    (isImage ? "Image" : isVideo || isVideoNoPreview ? "Video" : "Attachment");
   const typeBadge = isImage ? "Image" : isVideo ? "Video" : undefined;
   const videoPoster = useVideoThumbnail(isVideo ? url : undefined);
 
@@ -531,62 +551,62 @@ export function MessageAttachment({
           <>
             <img
               alt={filename || "attachment"}
-              className="size-full object-cover"
+              className='size-full object-cover'
               height={160}
               src={url}
               width={160}
             />
             {typeBadge && (
-              <span className="pointer-events-none absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white shadow-sm">
+              <span className='pointer-events-none absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white shadow-sm'>
                 {typeBadge}
               </span>
             )}
             {onRemove && (
               <Button
-                aria-label="Remove attachment"
-                className="hover-reveal absolute top-2 right-2 size-6 rounded-full bg-background/80 p-0 opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100 [&>svg]:size-3"
+                aria-label='Remove attachment'
+                className='hover-reveal absolute top-2 right-2 size-6 rounded-full bg-background/80 p-0 opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100 [&>svg]:size-3'
                 onClick={(e) => {
                   e.stopPropagation();
                   onRemove();
                 }}
-                type="button"
-                variant="ghost"
+                type='button'
+                variant='ghost'
               >
                 <XIcon />
-                <span className="sr-only">Remove</span>
+                <span className='sr-only'>Remove</span>
               </Button>
             )}
           </>
         ) : isVideo ? (
           <>
             <video
-              className="size-full object-cover"
+              className='size-full object-cover'
               height={160}
               poster={videoPoster ?? undefined}
-              preload="metadata"
+              preload='metadata'
               src={url}
               width={160}
               muted
               playsInline
             />
             {typeBadge && (
-              <span className="pointer-events-none absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white shadow-sm">
+              <span className='pointer-events-none absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white shadow-sm'>
                 {typeBadge}
               </span>
             )}
             {onRemove && (
               <Button
-                aria-label="Remove attachment"
-                className="hover-reveal absolute top-2 right-2 size-6 rounded-full bg-background/80 p-0 opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100 [&>svg]:size-3"
+                aria-label='Remove attachment'
+                className='hover-reveal absolute top-2 right-2 size-6 rounded-full bg-background/80 p-0 opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100 [&>svg]:size-3'
                 onClick={(e) => {
                   e.stopPropagation();
                   onRemove();
                 }}
-                type="button"
-                variant="ghost"
+                type='button'
+                variant='ghost'
               >
                 <XIcon />
-                <span className="sr-only">Remove</span>
+                <span className='sr-only'>Remove</span>
               </Button>
             )}
           </>
@@ -594,11 +614,11 @@ export function MessageAttachment({
           <>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex size-full shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <div className='flex size-full shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground'>
                   {isVideoNoPreview ? (
-                    <VideoIcon className="size-4" />
+                    <VideoIcon className='size-4' />
                   ) : (
-                    <PaperclipIcon className="size-4" />
+                    <PaperclipIcon className='size-4' />
                   )}
                 </div>
               </TooltipTrigger>
@@ -608,17 +628,17 @@ export function MessageAttachment({
             </Tooltip>
             {onRemove && (
               <Button
-                aria-label="Remove attachment"
-                className="hover-reveal size-6 shrink-0 rounded-full p-0 opacity-0 transition-opacity hover:bg-accent group-hover:opacity-100 [&>svg]:size-3"
+                aria-label='Remove attachment'
+                className='hover-reveal size-6 shrink-0 rounded-full p-0 opacity-0 transition-opacity hover:bg-accent group-hover:opacity-100 [&>svg]:size-3'
                 onClick={(e) => {
                   e.stopPropagation();
                   onRemove();
                 }}
-                type="button"
-                variant="ghost"
+                type='button'
+                variant='ghost'
               >
                 <XIcon />
-                <span className="sr-only">Remove</span>
+                <span className='sr-only'>Remove</span>
               </Button>
             )}
           </>
@@ -628,7 +648,7 @@ export function MessageAttachment({
       {canPreview ? (
         <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
           <DialogContent
-            className="max-w-[min(95vw,1100px)] overflow-hidden p-0 sm:max-w-[min(95vw,1100px)]"
+            className='max-w-[min(95vw,1100px)] overflow-hidden p-0 sm:max-w-[min(95vw,1100px)]'
             showCloseButton
           >
             <DialogHeader className={isText ? "p-4 pb-0" : "sr-only"}>
@@ -636,16 +656,16 @@ export function MessageAttachment({
                 {isText ? filename : "Attachment preview"}
               </DialogTitle>
             </DialogHeader>
-            <div className="bg-background">
+            <div className='bg-background'>
               {isImage ? (
                 <img
                   alt={filename || "attachment"}
-                  className="block max-h-[88vh] w-full object-contain"
+                  className='block max-h-[88vh] w-full object-contain'
                   src={url}
                 />
               ) : isVideo ? (
                 <video
-                  className="block max-h-[88vh] w-full object-contain"
+                  className='block max-h-[88vh] w-full object-contain'
                   src={url}
                   controls
                   poster={videoPoster ?? undefined}
@@ -653,7 +673,7 @@ export function MessageAttachment({
                   playsInline
                 />
               ) : isText && textContent !== null ? (
-                <pre className="max-h-[80vh] overflow-auto p-4 pt-2 text-sm whitespace-pre-wrap wrap-break-word font-mono">
+                <pre className='max-h-[80vh] overflow-auto p-4 pt-2 text-sm whitespace-pre-wrap wrap-break-word font-mono'>
                   {textContent}
                 </pre>
               ) : null}
