@@ -1116,13 +1116,13 @@ export const SessionsSidebar = memo(function SessionsSidebarComponent({
                                 }
                               }}
                               onClick={(e) => e.stopPropagation()}
-                              className='w-full text-sm font-medium text-foreground bg-background border border-input rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ring'
+                              className='w-full h-6 text-sm font-medium text-foreground outline-none focus:outline-none focus-visible:border-b focus-visible:border-b-input'
                             />
                           ) : (
                             <div className='flex items-center gap-2'>
                               <Tooltip delayDuration={500}>
                                 <TooltipTrigger asChild>
-                                  <p className='text-sm font-medium text-foreground truncate flex-1'>
+                                  <p className='text-sm font-medium text-foreground truncate flex-1 leading-6'>
                                     {normalizeTitle(session.title)}
                                   </p>
                                 </TooltipTrigger>
