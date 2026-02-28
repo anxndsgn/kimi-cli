@@ -1,4 +1,11 @@
-import { memo, type ReactElement, useCallback, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  type ReactElement,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ChatStatus } from "ai";
 import type { PromptInputMessage } from "@ai-elements";
 import type { ApprovalResponseDecision, TokenUsage } from "@/hooks/wireTypes";
@@ -14,8 +21,12 @@ import { ChatWorkspaceHeader } from "./components/chat-workspace-header";
 import { ChatConversation } from "./components/chat-conversation";
 import { ChatPromptComposer } from "./components/chat-prompt-composer";
 import { ApprovalDialog } from "./components/approval-dialog";
+import { QuestionDialog, usePendingQuestion } from "./components/question-dialog";
 import { useGitDiffStats } from "@/hooks/useGitDiffStats";
-import { deriveActivityStatus, type ActivityDetail } from "./components/activity-status-indicator";
+import {
+  deriveActivityStatus,
+  type ActivityDetail,
+} from "./components/activity-status-indicator";
 
 // Re-export LiveMessage type from hooks for backward compatibility
 export type { LiveMessage } from "@/hooks/types";
@@ -29,7 +40,11 @@ type ChatWorkspaceProps = {
   onApprovalResponse?: (
     requestId: string,
     decision: ApprovalResponseDecision,
-    reason?: string
+    reason?: string,
+  ) => Promise<void>;
+  onQuestionResponse?: (
+    requestId: string,
+    answers: Record<string, string>,
   ) => Promise<void>;
   sessionDescription?: string;
   /** Context usage (0-1) */
@@ -43,7 +58,10 @@ type ChatWorkspaceProps = {
   /** Whether the stream is still replaying history */
   isReplayingHistory?: boolean;
   /** List files inside the session workspace */
-  onListSessionDirectory?: (sessionId: string, path?: string) => Promise<SessionFileEntry[]>;
+  onListSessionDirectory?: (
+    sessionId: string,
+    path?: string,
+  ) => Promise<SessionFileEntry[]>;
   /** Build a direct download URL for a workspace file */
   onGetSessionFileUrl?: (sessionId: string, path: string) => string;
   /** Fetch a workspace file as a Blob for preview */
@@ -76,6 +94,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
   messages,
   selectedSessionId,
   onApprovalResponse,
+  onQuestionResponse,
   sessionDescription,
   contextUsage = 0,
   tokenUsage = null,
@@ -97,7 +116,15 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
 }: ChatWorkspaceProps): ReactElement {
   const [blocksExpanded, setBlocksExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [pendingApprovalMap, setPendingApprovalMap] = useState<Record<string, boolean>>({});
+  const [pendingApprovalMap, setPendingApprovalMap] = useState<
+    Record<string, boolean>
+  >({});
+  const [pendingQuestionMap, setPendingQuestionMap] = useState<
+    Record<string, boolean>
+  >({});
+
+  // Check if there's a pending question to replace the prompt composer
+  const hasPendingQuestion = usePendingQuestion(messages) !== null;
 
   // Fetch git diff stats for the current session
   const { stats: gitDiffStats, isLoading: isGitDiffLoading } = useGitDiffStats(
@@ -166,7 +193,7 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
         });
       }
     },
-    [onApprovalResponse]
+    [onApprovalResponse],
   );
 
   // Wrapper for ApprovalDialog that routes through handleApprovalAction
@@ -174,13 +201,43 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
   const handleDialogApprovalResponse = useCallback(
     async (requestId: string, decision: ApprovalResponseDecision) => {
       for (const message of messages) {
-        if (message.variant === "tool" && message.toolCall?.approval?.id === requestId) {
+        if (
+          message.variant === "tool" &&
+          message.toolCall?.approval?.id === requestId
+        ) {
           await handleApprovalAction(message.toolCall.approval, decision);
           return;
         }
       }
     },
-    [messages, handleApprovalAction]
+    [messages, handleApprovalAction],
+  );
+
+  const handleQuestionResponse = useCallback(
+    async (requestId: string, answers: Record<string, string>) => {
+      if (!onQuestionResponse) return;
+
+      setPendingQuestionMap((prev) => ({
+        ...prev,
+        [requestId]: true,
+      }));
+
+      try {
+        await onQuestionResponse(requestId, answers);
+      } catch (error) {
+        console.error("[ChatWorkspace] Failed to respond to question", error);
+        toast.error("Question response failed", {
+          description: error instanceof Error ? error.message : String(error),
+        });
+      } finally {
+        setPendingQuestionMap((prev) => {
+          const next = { ...prev };
+          delete next[requestId];
+          return next;
+        });
+      }
+    },
+    [onQuestionResponse],
   );
 
   return (
@@ -206,7 +263,9 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
             currentSession={currentSession}
             isReplayingHistory={isReplayingHistory}
             pendingApprovalMap={pendingApprovalMap}
-            onApprovalAction={onApprovalResponse ? handleApprovalAction : undefined}
+            onApprovalAction={
+              onApprovalResponse ? handleApprovalAction : undefined
+            }
             canRespondToApproval={Boolean(onApprovalResponse)}
             blocksExpanded={blocksExpanded}
             onCreateSession={onCreateSession}
@@ -224,28 +283,39 @@ export const ChatWorkspace = memo(function ChatWorkspaceComponent({
           canRespondToApproval={Boolean(onApprovalResponse)}
         />
 
+        {/* Bottom area: Question Dialog replaces prompt composer when active */}
         {currentSession && (
-          <div className="mt-auto shrink-0 px-3 pb-3">
-            <ChatPromptComposer
-              status={status}
-              onSubmit={onSubmit}
-              canSendMessage={canSendMessage}
-              currentSession={currentSession}
-              isUploading={isUploading}
-              isStreaming={isStreaming}
-              isAwaitingIdle={isAwaitingIdle}
-              isReplayingHistory={isReplayingHistory}
-              onCancel={onCancel}
-              onListSessionDirectory={onListSessionDirectory}
-              gitDiffStats={gitDiffStats}
-              isGitDiffLoading={isGitDiffLoading}
-              slashCommands={slashCommands}
-              activityStatus={activityStatus}
-              usagePercent={usagePercent}
-              usedTokens={usedTokens}
-              maxTokens={maxTokens}
-              tokenUsage={tokenUsage}
-            />
+          <div className="mt-auto flex-shrink-0">
+            {hasPendingQuestion ? (
+              <QuestionDialog
+                messages={messages}
+                onQuestionResponse={handleQuestionResponse}
+                pendingQuestionMap={pendingQuestionMap}
+              />
+            ) : (
+              <div className="px-0 pb-0 pt-0 sm:px-3 sm:pb-3">
+                <ChatPromptComposer
+                  status={status}
+                  onSubmit={onSubmit}
+                  canSendMessage={canSendMessage}
+                  currentSession={currentSession}
+                  isUploading={isUploading}
+                  isStreaming={isStreaming}
+                  isAwaitingIdle={isAwaitingIdle}
+                  isReplayingHistory={isReplayingHistory}
+                  onCancel={onCancel}
+                  onListSessionDirectory={onListSessionDirectory}
+                  gitDiffStats={gitDiffStats}
+                  isGitDiffLoading={isGitDiffLoading}
+                  slashCommands={slashCommands}
+                  activityStatus={activityStatus}
+                  usagePercent={usagePercent}
+                  usedTokens={usedTokens}
+                  maxTokens={maxTokens}
+                  tokenUsage={tokenUsage}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
